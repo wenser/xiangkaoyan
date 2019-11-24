@@ -1,0 +1,24 @@
+$color-brand: #ffd1a1;
+$color-brand-light: #ffd19a;
+$color-text-base: #5c5c6f; // 文字的基本色
+/* 引入 Taro UI 默认样式 */
+@import "~taro-ui/dist/style/index.scss";
+.main-nav {
+  border-top: 1rpx solid #f1f1f1;
+  background: #fefefe;
+}
+.at-tabs__header {
+  border-bottom: 1rpx solid #e1e1e1;
+  .at-tabs__item {
+    &.at-tabs__item--active {
+      font-size: 40rpx;
+    }
+    .at-tabs__item-underline {
+      bottom: 15rpx;
+      width: 40%;
+      height: 7rpx;
+      left: 30%;
+      border-radius: 7rpx;
+    }
+  }
+}

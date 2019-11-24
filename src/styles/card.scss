@@ -1,0 +1,33 @@
+
+.card {
+  background: #fff;
+  padding: 0 20rpx;
+  .author {
+    padding: 20rpx 0;
+    display: flex;
+    align-items: center;
+    .at-avatar {
+      margin-right: 15rpx;
+    }
+    .author-info {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+    }
+  }
+  .action-bar-container {
+    display: flex;
+    justify-content: space-around;
+    padding: 20rpx 0;
+    .action-bar {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .text {
+        margin-left: 15rpx;
+        font-size: 28rpx;
+      }
+    }
+  }
+}
