@@ -4,7 +4,7 @@ import { View, Text, ScrollView, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import { AtTabs, AtTabsPane, AtAvatar, AtIcon } from 'taro-ui'
 import { getArticles, getCategorys } from '../../api/bbs'
-import _ from 'lodash'
+import get from 'lodash/get'
 
 import { setCurrentArticleId } from '../../actions/article'
 
@@ -21,8 +21,6 @@ import './index.scss'
 // #endregion
 
 type PageStateProps = {
-  counter: any,
-  article: any
 }
 
 type PageDispatchProps = {
@@ -42,9 +40,7 @@ interface Index {
   props: IProps;
 }
 
-@connect(({ counter, article }) => ({
-  counter,
-  article
+@connect(() => ({
 }), (dispatch) => ({
   setCurrentArticleId (payload) {
     dispatch(setCurrentArticleId(payload))
@@ -71,32 +67,7 @@ class Index extends Component<IProps, PageState> {
     }
   }
   componentDidMount () {
-    console.log(this.props)
     this._fatchData()
-  }
-  async _fatchData () {
-    let categorys: any = await getCategorys()
-    this.setState({
-      tabList: (_.get(categorys, 'data.types') || []).map(item => ({
-        ...item,
-        title: item.name
-      }))
-    })
-    let articles: any = await getArticles()
-    this.setState({
-      articles: _.get(articles, 'data.page.content') || []
-    })
-  }
-  to (id) {
-    this.props.setCurrentArticleId(id)
-    Taro.navigateTo({
-      url: '/pages/store/index'
-    })
-  }
-  activeTab (i) {
-    this.setState({
-      current: i
-    })
   }
   componentDidShow() {
     let tabbar = this.$scope.getTabBar()
@@ -104,7 +75,26 @@ class Index extends Component<IProps, PageState> {
       current: 0
     })
   }
-  navToArticle () {
+  async _fatchData () {
+    let categorys: any = await getCategorys()
+    this.setState({
+      tabList: (get(categorys, 'data.types') || []).map(item => ({
+        ...item,
+        title: item.name
+      }))
+    })
+    let articles: any = await getArticles()
+    this.setState({
+      articles: get(articles, 'data.page.content') || []
+    })
+  }
+  activeTab (i) {
+    this.setState({
+      current: i
+    })
+  }
+  navToArticle (id) {
+    this.props.setCurrentArticleId(id)
     Taro.navigateTo({
       url: '/pages/article/index'
     })
@@ -122,20 +112,21 @@ class Index extends Component<IProps, PageState> {
                     articles.map((article) => {
                       return (
                         <View key={article.id} className='card'>
-                          <View className='author a-i-c'>
+                          {/* 主要信息 */}
+                          <View className='simple-article' onClick={() => this.navToArticle(article.id)}>
+                            <Text className='title'>{article.title}</Text>
+                            <Image mode='aspectFill' src={article.firstPicture} />
+                            <Text className='description'>{article.description}</Text>
+                          </View>
+                          {/* 作者 */}
+                          {/* <View className='author a-i-c'>
                             <AtAvatar circle text='作者'/>
                             <View className='author-info'>
                               <Text>李靓仔</Text>
                             </View>
                             <AtIcon value='menu' size='30' color='#9c9c9c' />
-                          </View>
-
-                          <View className='simple-article' onClick={this.navToArticle}>
-                            <Image mode='aspectFill' src={article.firstPicture} />
-                            <Text className='title'>{article.title}</Text>
-                            <Text className='description'>{article.description}</Text>
-                          </View>
-
+                          </View> */}
+                          {/* 操作栏 */}
                           <View className='action-bar-container'>
                             <View className='action-bar'>
                               <AtIcon value='message' size='30' color='#9c9c9c' />
@@ -146,7 +137,7 @@ class Index extends Component<IProps, PageState> {
                               <Text className='text'>7</Text>
                             </View>
                             <View className='action-bar'>
-                              <AtIcon value='heart-2' size='30' color='#ffc5a1' />
+                              <AtIcon value='heart-2' size='30' color='#ffb591' />
                               <Text className='text'>1201</Text>
                             </View>
                           </View>

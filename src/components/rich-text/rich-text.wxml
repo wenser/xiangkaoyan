@@ -1,0 +1,5 @@
+
+<ql-container><ql-editor
+  id="editor"
+  placeholder="输入内容..."
+></ql-editor></ql-container>

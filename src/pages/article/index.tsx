@@ -4,8 +4,11 @@ import { View, Button, Text, MovableArea, MovableView, Textarea } from '@tarojs/
 import { AtAvatar, AtIcon, AtFab, AtTextarea, AtFloatLayout, AtButton } from 'taro-ui'
 import { connect } from '@tarojs/redux'
 import SimpleArticle from '../../components/SimpleArticle'
+import { getArticle } from '../../api/bbs'
+import get from 'lodash/get'
 
 import './index.scss'
+import article from 'src/reducers/article'
 
 // #region 书写注意
 //
@@ -27,7 +30,8 @@ type PageDispatchProps = {
 type PageOwnProps = {}
 
 type PageState = {
-  writing: boolean
+  writing: boolean,
+  article: any
 }
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
@@ -36,19 +40,27 @@ interface Index {
   props: IProps;
 }
 
-@connect(({ article, counter }) => ({
-  article,
+@connect(({ article }) => ({
+  article
 }), () => ({
 }))
+
 class Index extends Component<IProps, PageState> {
   config: Config = {
     navigationBarTitleText: '文章详情'
   }
-  constructor () {
-    super()
-    this.state ={
-      writing: false
+
+  constructor (props) {
+    super(props)
+    this.state = {
+      writing: false,
+      article: {}
     }
+  }
+  navToArticle () {
+    Taro.navigateTo({
+      url: '/pages/article/index'
+    })
   }
 
   componentWillReceiveProps (nextProps) {
@@ -56,7 +68,14 @@ class Index extends Component<IProps, PageState> {
   }
 
   componentDidMount () {
-    console.log(this.props, this.state)
+    this._fatchData()
+  }
+
+  async _fatchData () {
+    let article = await getArticle(this.props.article.currentArticleId)
+    this.setState({
+      article: get(article, 'data.blog') || {}
+    })
   }
 
   componentDidShow () { }
@@ -68,19 +87,20 @@ class Index extends Component<IProps, PageState> {
     })
   }
   render () {
+    const curArticle = this.state.article
     return (
       <View className='container'>
         {/* 文章区 */}
         <View className='card'>
           <View className='author a-i-c'>
-            <AtAvatar circle text='作者'/>
+            <AtAvatar circle text='作者' image={curArticle.user && curArticle.user.avatar} />
             <View className='author-info'>
-              <Text>李靓仔</Text>
+              <Text>{curArticle.user && curArticle.user.nickname}</Text>
             </View>
             <AtIcon value='menu' size='30' color='#9c9c9c' />
           </View>
 
-          <SimpleArticle html={'article.content'} />
+          <SimpleArticle html={curArticle.content} />
           
           <View className='action-bar-container'>
             <View className='action-bar'>
@@ -92,7 +112,7 @@ class Index extends Component<IProps, PageState> {
               <Text className='text'>7</Text>
             </View>
             <View className='action-bar'>
-              <AtIcon value='heart-2' size='30' color='#ffc5a1' />
+              <AtIcon value='heart-2' size='30' color='#ffb591' />
               <Text className='text'>7</Text>
             </View>
           </View>
@@ -100,13 +120,14 @@ class Index extends Component<IProps, PageState> {
         {/* 评论区 */}
         <View className='comment'>
           <View className='comment-bar'>
-            <Text>评论区{2}</Text>
+            <Text>评论区（{0}）</Text>
             <View className='comment-bar-handle'>
               <Text>最新</Text>
-              <AtIcon value='arrow-up' size='30' color='rgb(21, 126, 255)' />
+              <AtIcon value='arrow-up' size='26' color='#90beff' />
             </View>
           </View>
           <View className='comment-list'>
+
             <View className='leave-word'>
               <View className='leave-word-bar'>
                 <AtAvatar circle text='' image={'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3010694652,2275025630&fm=26&gp=0.jpg'} />
@@ -115,7 +136,29 @@ class Index extends Component<IProps, PageState> {
                   <Text className='time'>三天前</Text>
                 </View>  
               </View>
-              <Text>哇塞你写的好棒我肥肠的崇拜的哦，你含棒棒哦！！！</Text>
+              <Text className='leave-word-content'>哇塞你写的好棒我肥肠的崇拜的哦，你含棒棒哦！！！</Text>
+            </View>
+
+            <View className='leave-word'>
+              <View className='leave-word-bar'>
+                <AtAvatar circle text='' image={'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3010694652,2275025630&fm=26&gp=0.jpg'} />
+                <View className='leave-word-user'>
+                  <Text>曾阿牛</Text>
+                  <Text className='time'>三天前</Text>
+                </View>  
+              </View>
+              <Text className='leave-word-content'>哇塞你写的好棒我肥肠的崇拜的哦，你含棒棒哦！！！</Text>
+            </View>
+
+            <View className='leave-word'>
+              <View className='leave-word-bar'>
+                <AtAvatar circle text='' image={'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3010694652,2275025630&fm=26&gp=0.jpg'} />
+                <View className='leave-word-user'>
+                  <Text>曾阿牛</Text>
+                  <Text className='time'>三天前</Text>
+                </View>  
+              </View>
+              <Text className='leave-word-content'>哇塞你写的好棒我肥肠的崇拜的哦，你含棒棒哦！！！</Text>
             </View>
           </View>
         </View>
@@ -130,9 +173,15 @@ class Index extends Component<IProps, PageState> {
         {/* 输入评论区 */}
         <AtFloatLayout
           isOpened={this.state.writing}
+          className='writing-dialog'
         >
           <View className='writing'>
-            <Textarea value='' showConfirmBar={true} maxlength={200} placeholder='请输入评论内容...' autoHeight={true}></Textarea>
+            <Textarea
+              value=''
+              showConfirmBar={false}
+              fixed={true} maxlength={200}
+              placeholder='发表你自己的看法...'
+              autoHeight={true}></Textarea>
             <View className='writing-bar'>
               <AtButton type='primary'>发送</AtButton>
             </View>

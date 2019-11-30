@@ -4,7 +4,7 @@ import { Provider } from '@tarojs/redux'
 
 import Index from './pages/bbs/index'
 
-import configStore from './store'
+import store from './store'
 
 import './app.less'
 import './styles/theme.scss'
@@ -14,8 +14,6 @@ import './styles/theme.scss'
 // if (process.env.NODE_ENV !== 'production' && process.env.TARO_ENV === 'h5')  {
 //   require('nerv-devtools')
 // }
-
-const store = configStore()
 
 class App extends Component {
   appid = 'wx45c37894295dfb7d'
@@ -29,9 +27,9 @@ class App extends Component {
    */
   config: Config = {
     pages: [
+      'pages/login/index',
       'pages/bbs/index',
       'pages/article/index',
-      'pages/login/index',
       'pages/store/index',
       'pages/tools/index',
       'pages/user/index'

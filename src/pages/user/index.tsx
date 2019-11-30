@@ -17,6 +17,9 @@ import { AtAvatar } from 'taro-ui'
 // #endregion
 
 type PageStateProps = {
+  login: {
+    userInfo: any
+  }
 }
 
 type PageDispatchProps = {
@@ -31,13 +34,16 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 interface Index {
   props: IProps;
 }
-
-@connect(() => ({
+@connect(({ login }) => ({
+  login
 }), () => ({
 }))
 class Index extends Component<IProps, PageState> {
   config: Config = {
-    navigationBarTitleText: '我的'
+    navigationBarTitleText: '我的',
+    usingComponents: {
+      'rich-text': '../../components/rich-text/rich-text'
+    }
   }
 
   componentWillReceiveProps (nextProps) {
@@ -56,13 +62,14 @@ class Index extends Component<IProps, PageState> {
   componentDidHide () { }
 
   render () {
+    const userInfo = this.props.login.userInfo
     return (
       <View className='user'>
         {/* 个人信息 */}
         <View className='me'>
           <View className='avatar'>
-            <AtAvatar circle text='' image=''/>
-            <Text className='name'>一条帅牛</Text>
+            <AtAvatar circle text={userInfo.nickName || '用户'} image={userInfo.avatarUrl} />
+            <Text className='name'>{userInfo.nickName || '未登录'}</Text>
             <Text>ID: 98798afdafs987</Text>
           </View>
         </View>
@@ -72,7 +79,7 @@ class Index extends Component<IProps, PageState> {
             考研小工具
           </Text>
           <View className='function-card'>
-
+            <rich-text myProperty={[1235]}></rich-text>
           </View>
         </View>
       </View>

@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-
+import store from '../store'
 const base = 'http://www.zhuimeng.group:8081/'
 
 type option = {
@@ -8,10 +8,17 @@ type option = {
   method?: "OPTIONS" | "GET" | 'POST' | 'DELETE' | 'PUT'
 }
 
-export default function request (option: option) {
+export default function request (option: option): Promise<any> {
+  const { login: { token } } = store.getState()
+  const _token = token ? {
+    token
+  } : null
   return new Promise(async (resolve, reject) => {
-    let res = await Taro.request({
-      header: 'application/json; charset=utf-8',
+    let res: any = await Taro.request({
+      header: {
+        'content-type': 'application/json; charset=utf-8',
+        ..._token
+      },
       ...option,
       url: base + option.url
     })

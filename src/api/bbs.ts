@@ -8,6 +8,16 @@ export function getArticles (data?: object) {
   })
 }
 
+export function getArticle (id) {
+  return requeset({
+    url: 'cms/wechat/blog/detail',
+    method: 'GET',
+    data: {
+      blogId: id
+    }
+  })
+}
+
 export function getCategorys (data?: object) {
   return requeset({
     url: 'cms/wechat/types',

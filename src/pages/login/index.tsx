@@ -3,8 +3,8 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Button, Text } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
 import { AtToast } from 'taro-ui'
-import { add, minus, asyncAdd } from '../../actions/counter'
-
+import { login } from '../../api/login'
+import { setToken, setUserInfo } from '../../actions/login'
 import './index.less'
 
 // #region 书写注意
@@ -18,20 +18,18 @@ import './index.less'
 // #endregion
 
 type PageStateProps = {
-  counter: {
-    num: number
-  }
 }
 
 type PageDispatchProps = {
-  add: () => void
-  dec: () => void
-  asyncAdd: () => any
+  setToken: (token: string) => void
+  setUserInfo: (payload: object) => void
 }
 
 type PageOwnProps = {}
 
-type PageState = {}
+type PageState = {
+  loading: boolean
+}
 
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps
 
@@ -39,20 +37,16 @@ interface Index {
   props: IProps;
 }
 
-@connect(({ counter }) => ({
-  counter
+@connect(() => ({
 }), (dispatch) => ({
-  add () {
-    dispatch(add())
+  setToken (token) {
+    dispatch(setToken(token))
   },
-  dec () {
-    dispatch(minus())
-  },
-  asyncAdd () {
-    dispatch(asyncAdd())
+  setUserInfo (payload) {
+    dispatch(setUserInfo(payload))
   }
 }))
-class Index extends Component {
+class Index extends Component<IProps, PageState> {
 
     /**
    * 指定config的类型声明为: Taro.Config
@@ -64,17 +58,15 @@ class Index extends Component {
     config: Config = {
     navigationBarTitleText: '首页'
   }
+  constructor (props) {
+    super(props)
+    this.state = {
+      loading: false
+    }
+  }
 
   componentDidMount () {
-    Taro.getUserInfo({
-      success: (res) => {
-        console.log(res)
-        this.launch()
-      },
-      fail (err) {
-        console.log(err)
-      }
-    })
+    this.login()
   }
 
   componentWillUnmount () { }
@@ -84,13 +76,39 @@ class Index extends Component {
   componentDidHide () { }
 
   getUserInfo (payload) {
-    console.log(payload)
     if (payload.detail.userInfo) {
-      this.launch()
+      this.login()
     }
   }
+  login () {
+    this.setState({
+      loading: true
+    })
+    Taro.login({
+      success: (loginRes) => {
+        Taro.getUserInfo({
+          success: async (infoRes) => {
+            let res: any = await login({
+              code: loginRes.code,
+              iv: infoRes.iv,
+              encryptedData: infoRes.encryptedData
+            })
+            this.setState({
+              loading: false
+            })
+            this.props.setUserInfo(infoRes.userInfo)
+            this.props.setToken(res.data.token)
+            this.launch()
+          },
+          fail: err => {
+            console.log(err)
+          },
+        })
+      }
+    })
+  }
   launch () {
-    Taro.navigateTo({
+    Taro.switchTab({
       url: '/pages/bbs/index'
     })
   }
@@ -103,7 +121,7 @@ class Index extends Component {
           hoverClass='btn-hover'
           openType='getUserInfo' onGetUserInfo={this.getUserInfo}
         >一键登录</Button>
-        <AtToast isOpened={true} duration={3000} status={'loading'} text='加载中' />
+        <AtToast isOpened={this.state.loading} duration={3000} status={'loading'} text='加载中' />
       </View>
     )
   }

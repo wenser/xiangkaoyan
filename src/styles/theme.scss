@@ -22,3 +22,15 @@ $color-text-base: #5c5c6f; // 文字的基本色
     }
   }
 }
+.at-float-layout {
+  .at-float-layout__container {
+    height: auto;
+    min-height: 0;
+    .layout-body {
+      min-height: 0;
+      .layout-body__content {
+        min-height: 0;
+      }
+    }
+  }
+}

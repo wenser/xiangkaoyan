@@ -25,13 +25,7 @@ export default class SimpleArticle extends Component<IProps, PageState> {
         animationDuration={1000}
         tagStyle={this.state.tagStyle}
         // html={this.props.html}
-        html={`
-          <div>
-            <h1>标题标题标题</h1>
-            <img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1354955884,3649724707&fm=26&gp=0.jpg" />
-            <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2246258957,1508957268&fm=26&gp=0.jpg" />
-          </div>
-        `}
+        html={this.props.html}
       ></ParserRichText>
     )
   }

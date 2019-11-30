@@ -1,14 +1,16 @@
 @import '../../styles/card.scss';
+// 容器
 .container {
-  padding: 20rpx 40rpx 0;
-  background: #fff;
   .card {
-    margin: -20rpx -20rpx 0;
+    background: #fff;
+    padding: 20rpx 40rpx 0;
+    margin-bottom: 20rpx;
     .action-bar-container {
       margin-top: 20rpx;
     }
   }
 }
+// 浮动按钮
 .float {
   position: fixed;
   top: 0;
@@ -25,6 +27,92 @@
     height: 112rpx;
     .at-fab {
       background: #fff;
+    }
+  }
+}
+// 评论区
+.comment {
+  background: #fff;
+  .comment-bar {
+    display: flex;
+    line-height: 100rpx;
+    border-bottom: 1px solid #e1e1e1;
+    padding: 0 40rpx;
+    justify-content: space-between;
+    & > text {
+      
+    }
+    .comment-bar-handle {
+      margin-right: -10rpx;
+      .at-icon {
+        position: relative;
+        top: -3rpx;
+      }
+    }
+  }
+  .comment-list {
+    padding-bottom: 20rpx;
+    .leave-word {
+      display: flex;
+      flex-direction: column;
+      padding: 40rpx 40rpx 25rpx;
+      border-bottom: 1px solid #e1e1e1;
+      &:last-of-type {
+        border-bottom: 0;
+      }
+      .leave-word-bar {
+        display: flex;
+        align-items: center;
+        .at-avatar {
+          margin-right: 15rpx;
+        }
+        .leave-word-user {
+          display: flex;
+          flex-direction: column;
+          .time {
+            margin-top: 10rpx;
+            font-size: 26rpx;
+            color: #9999aa;
+          }
+        }
+      }
+      .leave-word-content {
+        margin-top: 20rpx;
+      }
+    }
+  }
+}
+// 输入弹窗
+.writing-dialog {
+  .at-float-layout__container {
+    .layout-body {
+      .layout-body__content {
+      }
+    }
+  }
+  .writing {
+    padding: 40rpx 20rpx;
+    display: flex;
+    align-items: center;
+    textarea {
+      font-size: 32rpx;
+      margin-right: 20rpx;
+      transition: all 0.2s;
+    }
+    .writing-bar {
+      .at-button {
+        border-radius: 100rpx;
+        padding: 15rpx 0;
+        line-height: 1.1;
+        height: auto;
+        width: 150rpx;
+        box-shadow: 0 3rpx 10rpx 0 rgba(0,0,0,0.2);
+        background-image: linear-gradient(to right, rgb(50, 171, 255), rgb(107,211,255));
+        border: 0;
+        button, text, view {
+          color: #fff;
+        }
+      }
     }
   }
 }
