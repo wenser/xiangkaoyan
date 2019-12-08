@@ -1,0 +1,14 @@
+<textarea
+  class="{{custom}}"
+  value="{{value}}"
+  bindinput="bindinput"
+  bindfocus="bindfocus"
+  bindblur="bindblur"
+  focus="{{focus}}"
+  auto-height
+  cursor-spacing="{{30}}"
+  show-confirm-bar="{{false}}"
+  adjust-position
+  maxlength="{{maxlength}}"
+  placeholder="{{placeholder}}"
+/>

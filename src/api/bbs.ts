@@ -18,6 +18,14 @@ export function getArticle (id) {
   })
 }
 
+export function publishArticle (data) {
+  return requeset({
+    url: 'cms/wechat/blogs/publish',
+    method: 'POST',
+    data
+  })
+}
+
 export function getCategorys (data?: object) {
   return requeset({
     url: 'cms/wechat/types',

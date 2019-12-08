@@ -1,0 +1,10 @@
+.title-ipt {
+  font-weight: bold;
+  font-size: 40rpx;
+  line-height: 1.8;
+  border-bottom: 4rpx solid #009eff;
+  width: 100%;
+}
+.row-ipt {
+  width: 100%;
+}

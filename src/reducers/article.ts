@@ -1,7 +1,8 @@
-import { SET_CURRENT_ARTICLE_ID } from '../constants/article'
+import { SET_CURRENT_ARTICLE_ID, SET_ARTICLE_CATEGORYs } from '../constants/article'
 
 const INITIAL_STATE = {
-  currentArticleId: null
+  currentArticleId: null,
+  articleCategorys: []
 }
 
 export default function article (state = INITIAL_STATE, action) {
@@ -10,6 +11,11 @@ export default function article (state = INITIAL_STATE, action) {
       return {
         ...state,
         currentArticleId: action.payload
+      }
+    case SET_ARTICLE_CATEGORYs:
+      return {
+        ...state,
+        articleCategorys: action.payload
       }
     default:
       return state

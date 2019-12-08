@@ -1,0 +1,83 @@
+page {
+  background: #fff;
+}
+.container {
+  padding: 40rpx 40rpx 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+.title {
+  margin-bottom: 60rpx;
+}
+.content {
+  flex: 1;
+  position: relative;
+  padding-bottom: 200px;
+  box-sizing: border-box;
+  z-index: 1;
+  .content-bg {
+    // background: pink;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    bottom: 0;
+  }
+  .row {
+    position: relative;
+    background: #fcfcfc;
+    background-clip: content-box;
+    .row-wrap {
+      position: relative;
+      padding-bottom: 40rpx;
+      z-index: 1;
+      .image {
+        border: 1px solid transparent;
+        image {
+          display: block;
+        }
+        &.active {
+          border-color: #6190E8;
+        }
+      }
+    }
+  }
+}
+.handle-bar {
+  position: absolute;
+  box-shadow: 0 0 10rpx 0 rgba(0,0,0,0.5);
+  top: -100rpx;
+  right: 0;
+  z-index: 33333333;
+  border-radius: 10rpx;
+  overflow: hidden;
+  .handle-wrap {
+    background: #fff;
+    display: flex;
+    border-radius: 10rpx;
+    .handle-row {
+      height: 80rpx;
+      padding: 0 30rpx;
+      display: flex;
+      align-items: center;
+      .handlebar-icon {
+      }
+    }
+  }
+}
+.commit {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  button {
+    border-radius: 0;
+    background-image: linear-gradient(to right, rgb(50, 171, 255), rgb(107,211,255));
+    color: #fff;
+    &::after {
+      border-radius: 0;
+    }
+  }
+}

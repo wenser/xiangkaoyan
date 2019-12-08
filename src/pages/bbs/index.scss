@@ -11,6 +11,12 @@ page {
   box-sizing: border-box;
   height: 100%;
   background: #f1f1f1;
+  .at-tabs__header {
+    padding-right: 100rpx;
+    .at-tabs__item {
+      padding-top: 12rpx;
+    }
+  }
   & > view {
     height: 100%;
     .at-tabs-pane {
@@ -19,8 +25,40 @@ page {
         height: calc(100% - 194rpx);
         .card {
           margin: 0rpx 0 15rpx;
+          transition: all 0.3s;
+          &:active {
+            background: #e1e1e1;
+          }
         }
       }
+    }
+  }
+}
+
+.search {
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  right: 0;
+  width: 100rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 20rpx;
+  view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40rpx;
+    height: 40rpx;
+    border-radius: 50%;
+    background-image: linear-gradient(to right, rgb(50, 171, 255), rgb(107,211,255));
+    text-align: center;
+    line-height: 40rpx;
+    .at-icon {
+      line-height: 40rpx;
+      font-size: 20rpx !important;
     }
   }
 }
@@ -41,5 +79,15 @@ page {
     font-size: 40rpx;
     line-height: 1.4;
     margin-bottom: 15rpx;
+  }
+  .description {
+    line-height: 60rpx;
+    max-height: 120rpx;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    word-break: break-all;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2; 
   }
 }

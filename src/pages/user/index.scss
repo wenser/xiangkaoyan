@@ -1,3 +1,6 @@
+page {
+  background: #fdfdff;
+}
 .user {
   flex-direction: column;
   width: 100%;
@@ -15,6 +18,25 @@
       margin-left: 15rpx;
       flex: 1;
       font-size: 36rpx;
+    }
+  }
+}
+.statistics {
+  display: flex;
+  justify-content: space-between;
+  padding: 20rpx 80rpx;
+  margin-bottom: 20rpx;
+  view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .count {
+      font-size: 46rpx;
+      color: #4a4a6a;
+    }
+    .des {
+      font-size: 28rpx;
+      color: #999;
     }
   }
 }

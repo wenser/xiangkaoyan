@@ -61,16 +61,47 @@ class Index extends Component<IProps, PageState> {
 
   componentDidHide () { }
 
+  login () {
+    if (!this.props.login.userInfo.nickName) {
+      Taro.navigateTo({
+        url: '/pages/login/index'
+      })
+    }
+  }
+
   render () {
     const userInfo = this.props.login.userInfo
     return (
       <View className='user'>
         {/* 个人信息 */}
         <View className='me'>
-          <View className='avatar'>
+          <View className='avatar' onClick={this.login}>
             <AtAvatar circle text={userInfo.nickName || '用户'} image={userInfo.avatarUrl} />
             <Text className='name'>{userInfo.nickName || '未登录'}</Text>
             <Text>ID: 98798afdafs987</Text>
+          </View>
+        </View>
+        {/* 交互统计 */}
+        <View className='statistics'>
+          <View>
+            <Text className='count'>0</Text>
+            <Text className='des'>获赞</Text>
+          </View>
+          <View>
+            <Text className='count'>0</Text>
+            <Text className='des'>点赞</Text>
+          </View>
+          <View>
+            <Text className='count'>0</Text>
+            <Text className='des'>关注</Text>
+          </View>
+          <View>
+            <Text className='count'>0</Text>
+            <Text className='des'>获赞</Text>
+          </View>
+          <View>
+            <Text className='count'>0</Text>
+            <Text className='des'>访客</Text>
           </View>
         </View>
         {/* 功能 */}
@@ -79,7 +110,7 @@ class Index extends Component<IProps, PageState> {
             考研小工具
           </Text>
           <View className='function-card'>
-            <rich-text myProperty={[1235]}></rich-text>
+            
           </View>
         </View>
       </View>

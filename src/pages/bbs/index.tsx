@@ -2,11 +2,11 @@ import { ComponentClass } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text, ScrollView, Image } from '@tarojs/components'
 import { connect } from '@tarojs/redux'
-import { AtTabs, AtTabsPane, AtAvatar, AtIcon } from 'taro-ui'
+import { AtTabs, AtTabsPane, AtAvatar, AtIcon, AtSearchBar } from 'taro-ui'
 import { getArticles, getCategorys } from '../../api/bbs'
 import get from 'lodash/get'
 
-import { setCurrentArticleId } from '../../actions/article'
+import { setCurrentArticleId, setArticleCategorys } from '../../actions/article'
 
 import './index.scss'
 
@@ -21,16 +21,17 @@ import './index.scss'
 // #endregion
 
 type PageStateProps = {
+  article
 }
 
 type PageDispatchProps = {
   setCurrentArticleId: (id: string) => void
+  setArticleCategorys: (id: string) => void
 }
 type PageOwnProps = {}
 
 type PageState = {
   current: number,
-  tabList: Array<any>,
   articles: Array<any>
 }
 
@@ -40,10 +41,14 @@ interface Index {
   props: IProps;
 }
 
-@connect(() => ({
+@connect(({ article }) => ({
+  article
 }), (dispatch) => ({
   setCurrentArticleId (payload) {
     dispatch(setCurrentArticleId(payload))
+  },
+  setArticleCategorys (payload) {
+    dispatch(setArticleCategorys(payload))
   }
 }))
 class Index extends Component<IProps, PageState> {
@@ -62,7 +67,6 @@ class Index extends Component<IProps, PageState> {
     super(props)
     this.state = {
       current: 0,
-      tabList: [],
       articles: []
     }
   }
@@ -77,12 +81,10 @@ class Index extends Component<IProps, PageState> {
   }
   async _fatchData () {
     let categorys: any = await getCategorys()
-    this.setState({
-      tabList: (get(categorys, 'data.types') || []).map(item => ({
-        ...item,
-        title: item.name
-      }))
-    })
+    this.props.setArticleCategorys((get(categorys, 'data.types') || []).map(item => ({
+      ...item,
+      title: item.name
+    })))
     let articles: any = await getArticles()
     this.setState({
       articles: get(articles, 'data.page.content') || []
@@ -99,14 +101,46 @@ class Index extends Component<IProps, PageState> {
       url: '/pages/article/index'
     })
   }
+  format (text: any) {
+    const reg = /<[^<]*>/g
+    text = (text as string).replace(reg, '').substring(0, 150)
+    return text
+  }
+  toEditorPage () {
+    Taro.navigateTo({
+      url: '/pages/editor/index'
+    })
+  }
+  toSearchPage () {
+    Taro.navigateTo({
+      url: '/pages/search/index'
+    })
+  }
   render () {
     const articles = this.state.articles
+    const tabList = this.props.article.articleCategorys
     return (
       <View className='index'>
-        <AtTabs className='nav' scroll={true} current={this.state.current} tabList={this.state.tabList} onClick={this.activeTab.bind(this)}>
+        <View className='search'>
+          <View onClick={this.toSearchPage}>
+            <AtIcon value='search' size='24' color='#fff' />
+          </View>
+          <View onClick={this.toEditorPage}>
+            <AtIcon value='add' size='24' color='#fff' />
+          </View>
+        </View>
+        <AtTabs className='nav' scroll={true} current={this.state.current} tabList={tabList} onClick={this.activeTab.bind(this)}>
           {
-            this.state.tabList.map((item, i) => {
+            tabList.map((item, i) => {
               return <AtTabsPane current={this.state.current} key={item.id} index={i}>
+                <View onClick={this.toSearchPage}>
+                  <AtSearchBar
+                    value=''
+                    onChange={() => {}}
+                    disabled={true}
+                    placeholder={`大家都在搜[${'6旬老汉午夜寻欢'}]`}
+                  />
+                </View>
                 <ScrollView scrollY={true} className='scroll-view'>
                   {
                     articles.map((article) => {
@@ -115,17 +149,17 @@ class Index extends Component<IProps, PageState> {
                           {/* 主要信息 */}
                           <View className='simple-article' onClick={() => this.navToArticle(article.id)}>
                             <Text className='title'>{article.title}</Text>
-                            <Image mode='aspectFill' src={article.firstPicture} />
-                            <Text className='description'>{article.description}</Text>
-                          </View>
-                          {/* 作者 */}
-                          {/* <View className='author a-i-c'>
-                            <AtAvatar circle text='作者'/>
-                            <View className='author-info'>
-                              <Text>李靓仔</Text>
+                            {/* 作者 */}
+                            <View className='author a-i-c small'>
+                              <AtAvatar circle size='small' text='作者'/>
+                              <View className='author-info'>
+                                <Text>李靓仔</Text>
+                              </View>
+                              {/* <AtIcon value='menu' size='30' color='#9c9c9c' /> */}
                             </View>
-                            <AtIcon value='menu' size='30' color='#9c9c9c' />
-                          </View> */}
+                            {/* <Image mode='aspectFill' src={article.firstPicture} /> */}
+                            <Text className='description'>{this.format(article.content)}</Text>
+                          </View>
                           {/* 操作栏 */}
                           <View className='action-bar-container'>
                             <View className='action-bar'>
